@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nisa ile Okuma Öğreniyorum - MEB İlk 4 Hafta Akıllı Pratik & Test</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Gömülü Doğal Türkçe Ses Paketi (Yelda Stüdyo Kayıtları) -->
+  <script src="audio_bundle.js"></script>
   <style>
     :root {
       --background: #f8fafc;
@@ -64,7 +66,7 @@
         </div>
         <div>
           <h1 class="font-extrabold text-sm leading-tight">Nisa Okuma Dünyası</h1>
-          <p class="text-[10px] font-semibold text-blue-600 dark:text-blue-400">MEB İlk 4 Hafta Akıllı Sistem</p>
+          <p class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">🇹🇷 %100 Doğal Türkçe Ses Aktif</p>
         </div>
       </div>
 
@@ -118,7 +120,7 @@
       <section id="view-practice" class="space-y-3">
         <div class="px-3.5 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
           <span id="week-desc" class="font-bold text-blue-700 dark:text-blue-300">Hedef Sesler: A, a, N, n → an, na, ana</span>
-          <span id="card-progress" class="font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px]">1 / 5</span>
+          <span id="card-progress" class="font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px]">1 / 4</span>
         </div>
 
         <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-3xl p-4 shadow-sm flex flex-col items-center space-y-3.5">
@@ -152,7 +154,7 @@
           <div class="text-[11px] font-extrabold text-[var(--muted-foreground)]">⬇️ BİRLEŞTİR VE OKU ⬇️</div>
 
           <!-- Birleşmiş Kutu -->
-          <div id="merged-card" onclick="verifyReading()" class="cursor-pointer w-full py-4 px-4 rounded-3xl bg-[var(--background)] border-2 border-dashed border-blue-500/50 flex flex-col items-center justify-center space-y-1.5 animate-pop">
+          <div id="merged-card" onclick="verifyReading(false)" class="cursor-pointer w-full py-4 px-4 rounded-3xl bg-[var(--background)] border-2 border-dashed border-blue-500/50 flex flex-col items-center justify-center space-y-1.5 animate-pop">
             <div id="merged-text" class="text-5xl font-black tracking-wide leading-none">
               <span class="syl-red">a</span><span class="syl-blue">n</span>
             </div>
@@ -164,16 +166,22 @@
             </div>
           </div>
 
-          <!-- Sesle Teyit Butonu -->
+          <!-- Sesle Teyit Butonu (Normal & Yavaş Tane Tane) -->
           <div class="w-full space-y-2">
-            <button id="verify-sound-btn" onclick="verifyReading()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-sm shadow-md flex items-center justify-center gap-2 active:scale-95 transition pulse-btn">
-              <span class="text-xl">🔊</span>
-              <span id="verify-btn-label">Sesle Teyit Et (Dinle)</span>
-            </button>
+            <div class="grid grid-cols-3 gap-2">
+              <button id="verify-sound-btn" onclick="verifyReading(false)" class="col-span-2 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-sm shadow-md flex items-center justify-center gap-2 active:scale-95 transition pulse-btn">
+                <span class="text-xl">🔊</span>
+                <span id="verify-btn-label">Sesle Teyit Et</span>
+              </button>
+              <button onclick="verifyReading(true)" class="py-3.5 rounded-2xl bg-indigo-500/15 border-2 border-indigo-500/30 text-indigo-700 dark:text-indigo-300 font-black text-xs flex items-center justify-center gap-1 active:scale-95 transition">
+                <span>🐢</span>
+                <span>Hece Hece</span>
+              </button>
+            </div>
 
             <div id="self-check-panel" class="hidden grid-cols-2 gap-2 pt-1 animate-pop">
-              <button onclick="repeatCurrentCard()" class="py-2.5 px-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-xs flex items-center justify-center gap-1 active:scale-95">
-                <span>🔄</span> Tekrar Çalış
+              <button onclick="verifyReading(true)" class="py-2.5 px-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-xs flex items-center justify-center gap-1 active:scale-95">
+                <span>🔄</span> Yavaş Tekrar Dinle
               </button>
               <button onclick="confirmCorrectAndNext()" class="py-2.5 px-3 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow-sm active:scale-95">
                 <span>✅</span> Doğru Okudum!
@@ -224,11 +232,17 @@
             </p>
           </div>
 
-          <!-- Büyük Ses Dinleme Butonu -->
-          <button onclick="playCurrentQuizAudio()" class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white text-4xl flex flex-col items-center justify-center shadow-lg active:scale-90 transition pulse-btn">
-            <span>🔊</span>
-            <span class="text-[10px] font-extrabold mt-1">DİNLE</span>
-          </button>
+          <!-- Normal ve Yavaş Ses Dinleme Butonları -->
+          <div class="flex items-center gap-3">
+            <button onclick="playCurrentQuizAudio(false)" class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white text-4xl flex flex-col items-center justify-center shadow-lg active:scale-90 transition pulse-btn">
+              <span>🔊</span>
+              <span class="text-[10px] font-extrabold mt-1">DİNLE</span>
+            </button>
+            <button onclick="playCurrentQuizAudio(true)" class="w-16 h-16 rounded-2xl bg-indigo-500/15 border-2 border-indigo-500/30 text-indigo-700 dark:text-indigo-300 flex flex-col items-center justify-center active:scale-90 transition">
+              <span class="text-xl">🐢</span>
+              <span class="text-[9px] font-black mt-0.5">TANE TANE</span>
+            </button>
+          </div>
 
           <!-- 2 veya 3 Seçenekli Cevap Alanı -->
           <div id="quiz-choices-container" class="w-full grid grid-cols-2 gap-3 pt-2">
@@ -326,7 +340,6 @@
               </h2>
               <p class="text-[11px] text-[var(--muted-foreground)]">Aynı kelimede farklı günlerde takılıyor mu?</p>
             </div>
-            <!-- Veli/Öğretmen için farklı gün simülasyonu veya sıfırlama -->
             <button onclick="resetAllStats()" class="text-[10px] font-bold text-rose-500 underline">İstatistiği Sıfırla</button>
           </div>
 
@@ -342,7 +355,7 @@
     <!-- ALT MOBİL NAVİGASYON BARI (3 ANA SEKME) -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[var(--card)]/95 backdrop-blur border-t border-[var(--border)]">
       <div class="max-w-md mx-auto grid grid-cols-3 px-3 py-1.5 gap-2">
-        <button onclick="switchMainView('practice')" id="nav-btn-practice" class=" flex flex-col items-center justify-center py-1.5 rounded-2xl text-blue-600 bg-blue-500/10 font-extrabold transition">
+        <button onclick="switchMainView('practice')" id="nav-btn-practice" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-blue-600 bg-blue-500/10 font-extrabold transition">
           <span class="text-lg">📖</span>
           <span class="text-[11px] mt-0.5">1. Çalış & Oku</span>
         </button>
@@ -361,7 +374,7 @@
 
   <script>
     // ============================================================================
-    // 1. MEB İLK 4 HAFTALIK MÜFREDAT VERİ SETİ (HER ÖĞENİN BENZERSİZ ID'Sİ VARDIR)
+    // 1. MEB İLK 4 HAFTALIK MÜFREDAT VERİ SETİ
     // ============================================================================
     const first4WeeksPlan = [
       {
@@ -419,20 +432,73 @@
       }
     ];
 
-    // Tüm öğelerin düz listesi
     const allCurriculumItems = first4WeeksPlan.flatMap(w => w.items);
 
     // ============================================================================
-    // 2. NİSA ÖZEL AKILLI İSTATİSTİK & LEITNER KUTU SİSTEMİ (LOCALSTORAGE)
+    // 2. %100 DOĞAL TÜRKÇE SES MOTORU (ÖNCE GÖMÜLÜ STÜDYO KAYDI, YOKSA YELDA TR)
+    // ============================================================================
+    let activeAudioPlayer = null;
+
+    function playNaturalTurkish(key, useSlow = false) {
+      // Varsa çalan sesi durdur
+      if (activeAudioPlayer) {
+        activeAudioPlayer.pause();
+        activeAudioPlayer.currentTime = 0;
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+
+      const bundle = window.TURKISH_AUDIO_BUNDLE || {};
+      const lookupKey = (useSlow && bundle[key + "_slow"]) ? (key + "_slow") : key;
+
+      // 1. Öncelik: Gömülü %100 Doğal Türkçe Stüdyo Sesi (Her cihazda aynı netlikte çalışır)
+      if (bundle[lookupKey]) {
+        activeAudioPlayer = new Audio(bundle[lookupKey]);
+        activeAudioPlayer.play().catch(err => {
+          console.warn("Audio play engellendi, fallback kullanılıyor:", err);
+          fallbackWebSpeechTurkish(key, useSlow);
+        });
+        return;
+      }
+
+      // 2. Öncelik: Audio klasöründeki .m4a dosyası
+      const audioFileUrl = `audio/${lookupKey}.m4a`;
+      activeAudioPlayer = new Audio(audioFileUrl);
+      activeAudioPlayer.play().catch(() => {
+        fallbackWebSpeechTurkish(key, useSlow);
+      });
+    }
+
+    function fallbackWebSpeechTurkish(text, useSlow = false) {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      // Sadece Türkçe (tr-TR) sesleri filtrele (Yelda, Emel, Filiz vb.)
+      const trVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('tr') && v.name.includes('Yelda'))
+                   || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('tr'));
+
+      const phoneticMap = { "n": "nı", "t": "tı", "l": "lı" };
+      const cleanText = phoneticMap[text] || text;
+
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = 'tr-TR';
+      if (trVoice) utter.voice = trVoice;
+      utter.rate = useSlow ? 0.65 : 0.82;
+      utter.pitch = 1.0;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ============================================================================
+    // 3. NİSA ÖZEL AKILLI İSTATİSTİK & LEITNER KUTU SİSTEMİ
     // ============================================================================
     const STORAGE_KEY = "nisa_okuma_akilli_veri_v1";
 
     let appState = {
       stars: 0,
       praiseNisaEnabled: true,
-      optionCount: 2, // 2 ya da 3 seçenek
-      itemStats: {},  // { [id]: { correct, wrong, streak, box: 'learning'|'struggling'|'mastered', dailyHistory: { 'YYYY-MM-DD': {c, w} }, confusedWith: {} } }
-      dailyLogs: {}   // { 'YYYY-MM-DD': { total, correct, wrong, wrongItems: [] } }
+      optionCount: 2,
+      itemStats: {},
+      dailyLogs: {}
     };
 
     function loadState() {
@@ -459,7 +525,7 @@
 
     function getTodayDateStr() {
       const d = new Date();
-      return d.toISOString().split('T')[0]; // YYYY-MM-DD
+      return d.toISOString().split('T')[0];
     }
 
     function ensureItemStat(itemId) {
@@ -468,21 +534,20 @@
           correct: 0,
           wrong: 0,
           streak: 0,
-          box: "learning", // 'struggling' (Takıldığı) | 'learning' (Normal) | 'mastered' (Nadir Çıkarılacaklar Kutusu)
-          dailyHistory: {}, // { '2026-10-27': { c: 1, w: 2 } }
-          confusedWith: {}  // Hangi şıkla karıştırdı?
+          box: "learning",
+          dailyHistory: {},
+          confusedWith: {}
         };
       }
       return appState.itemStats[itemId];
     }
 
-    // "Tebrikler Nisa" Sesli Övgü Aç/Kapat
     function togglePraise() {
       appState.praiseNisaEnabled = !appState.praiseNisaEnabled;
       saveState();
       updatePraiseButtonUI();
       if (appState.praiseNisaEnabled) {
-        speakTurkish("Tebrikler Nisa özelliği açıldı", 0.95);
+        playNaturalTurkish("nisa_acildi");
       }
     }
 
@@ -502,30 +567,9 @@
     }
 
     // ============================================================================
-    // 3. TÜRKÇE SESLENDİRME MOTORU
-    // ============================================================================
-    function speakTurkish(text, rate = 0.84) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-
-      const phoneticMap = {
-        "n": "nı",
-        "t": "tı",
-        "l": "lı"
-      };
-      const cleanText = phoneticMap[text] || text;
-
-      const utter = new SpeechSynthesisUtterance(cleanText);
-      utter.lang = 'tr-TR';
-      utter.rate = rate;
-      utter.pitch = 1.05;
-      window.speechSynthesis.speak(utter);
-    }
-
-    // ============================================================================
     // 4. AKTİF HAFTA VE ÇALIŞMA MODÜLÜ
     // ============================================================================
-    let activeWeekIdx = 0; // 0,1,2,3 (Haftalar) veya 4 (Tümü/Karma)
+    let activeWeekIdx = 0;
     let activeCardIdx = 0;
     let currentView = "practice";
 
@@ -621,7 +665,7 @@
       checkPanel.classList.add('hidden');
       checkPanel.classList.remove('grid');
 
-      document.getElementById('verify-btn-label').textContent = "Sesle Teyit Et (Dinle)";
+      document.getElementById('verify-btn-label').textContent = "Sesle Teyit Et";
       renderWeekGrid();
     }
 
@@ -629,16 +673,16 @@
       const pool = getActivePool();
       const item = pool[activeCardIdx];
       if (item && item.parts[partIdx]) {
-        speakTurkish(item.parts[partIdx], 0.8);
+        playNaturalTurkish(item.parts[partIdx], false);
       }
     }
 
-    function verifyReading() {
+    function verifyReading(useSlow = false) {
       const pool = getActivePool();
       const item = pool[activeCardIdx];
       if (!item) return;
 
-      speakTurkish(item.tts, 0.8);
+      playNaturalTurkish(item.tts, useSlow);
 
       const cardBox = document.getElementById('merged-card');
       cardBox.classList.remove('border-blue-500/50');
@@ -651,7 +695,7 @@
 
       const inst = document.getElementById('step-instruction');
       inst.className = "w-full py-1.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-extrabold text-center";
-      inst.textContent = "🔊 Sesi dinledin! Doğru okuduysan 'Doğru Okudum' tuşuna bas!";
+      inst.textContent = "🔊 Doğal Türkçe sesi dinledin! Doğru okuduysan 'Doğru Okudum' tuşuna bas!";
 
       document.getElementById('verify-btn-label').textContent = "Tekrar Dinle";
 
@@ -660,20 +704,14 @@
       checkPanel.classList.add('grid');
     }
 
-    function repeatCurrentCard() {
-      const pool = getActivePool();
-      const item = pool[activeCardIdx];
-      speakTurkish(item.tts, 0.72);
-    }
-
     function confirmCorrectAndNext() {
       appState.stars += 1;
       document.getElementById('star-score').textContent = appState.stars;
       saveState();
 
       if (appState.praiseNisaEnabled) {
-        speakTurkish("Tebrikler Nisa!", 0.95);
-        setTimeout(() => nextCard(), 1100);
+        playNaturalTurkish("tebrikler_nisa");
+        setTimeout(() => nextCard(), 1500);
       } else {
         nextCard();
       }
@@ -729,7 +767,7 @@
     }
 
     // ============================================================================
-    // 5. AKILLI MİNİK TEST MOTORU (SPACED REPETITION / NADİR KUTUSU DESTEKLİ)
+    // 5. AKILLI MİNİK TEST MOTORU
     // ============================================================================
     let currentQuizTarget = null;
     let currentQuizAnswered = false;
@@ -748,10 +786,6 @@
       nextSmartQuizQuestion();
     }
 
-    // Akıllı Ağırlıklı Soru Seçici:
-    // - Takıldığı kelimeler (box === 'struggling') -> Çok yüksek ağırlık (Weight: 12)
-    // - Yeni / Öğrenmekte olduğu kelimeler (box === 'learning') -> Normal ağırlık (Weight: 5)
-    // - Nadir Çıkarılacaklar Kutusu (box === 'mastered') -> Çok düşük ağırlık (Weight: 0.6 -> Nadir çıkar)
     function pickSmartItem(pool) {
       if (forceStrugglingOnly) {
         const strugglingItems = allCurriculumItems.filter(it => {
@@ -768,14 +802,13 @@
         const st = ensureItemStat(item.id);
         let weight = 5;
         if (st.box === 'struggling') {
-          weight = 14 + (st.wrong * 3); // En çok takıldıklarını önceliklendir
+          weight = 14 + (st.wrong * 3);
         } else if (st.box === 'mastered') {
-          weight = 0.5; // Nadir çıkarılacaklar kutusundakileri çok az çıkar
+          weight = 0.5;
         } else if (st.correct === 0 && st.wrong === 0) {
-          weight = 7; // Hiç sorulmamışları keşfet
+          weight = 7;
         }
 
-        // Aynı soru üst üste gelmesin
         if (currentQuizTarget && currentQuizTarget.id === item.id && pool.length > 1) {
           weight = 0.05;
         }
@@ -799,7 +832,6 @@
 
       const st = ensureItemStat(target.id);
 
-      // Kutu rozetini güncelle
       const badgeEl = document.getElementById('quiz-item-box-badge');
       if (st.box === 'struggling') {
         badgeEl.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-600";
@@ -816,7 +848,6 @@
       document.getElementById('quiz-history-hint').textContent =
         `Geçmiş: ${st.correct} Doğru, ${st.wrong} Yanlış (${dayCount} farklı günde soruldu)`;
 
-      // Çeldirici seçenekleri hazırla (Özellikle ters heceleri veya benzer sesleri seçer: örn 'an' için 'na')
       const distractorPool = allCurriculumItems.filter(it => it.id !== target.id);
       distractorPool.sort((a, b) => {
         const aSameWeek = a.week === target.week ? 0 : 1;
@@ -848,13 +879,12 @@
       fb.textContent = "";
       fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-sm font-black text-center px-3";
 
-      // Otomatik olarak sesi çal (Önce dinlesin)
-      setTimeout(() => playCurrentQuizAudio(), 250);
+      setTimeout(() => playCurrentQuizAudio(false), 250);
     }
 
-    function playCurrentQuizAudio() {
+    function playCurrentQuizAudio(useSlow = false) {
       if (currentQuizTarget) {
-        speakTurkish(currentQuizTarget.tts, 0.8);
+        playNaturalTurkish(currentQuizTarget.tts, useSlow);
       }
     }
 
@@ -874,7 +904,6 @@
       const btnEl = document.getElementById('qchoice-' + chosenId);
 
       if (chosenId === currentQuizTarget.id) {
-        // DOĞRU CEVAP
         currentQuizAnswered = true;
         st.correct += 1;
         st.streak += 1;
@@ -885,7 +914,6 @@
         appState.stars += 2;
         document.getElementById('star-score').textContent = appState.stars;
 
-        // Kutu Güncellemesi: Üst üste 3 doğru bildiyse "Nadir Çıkarılacaklar Kutusu"na (mastered) at!
         let movedToMastered = false;
         if (st.streak >= 3 && st.box !== 'mastered') {
           st.box = 'mastered';
@@ -907,24 +935,24 @@
         fb.textContent = praiseMsg;
         fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-xs font-black text-center px-3 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 animate-pop";
 
-        if (appState.praiseNisaEnabled) {
-          speakTurkish("Tebrikler Nisa!", 0.95);
+        if (movedToMastered && appState.praiseNisaEnabled) {
+          playNaturalTurkish("nadir_kutu");
+        } else if (appState.praiseNisaEnabled) {
+          playNaturalTurkish("tebrikler_nisa");
         } else {
-          speakTurkish("Doğru!", 0.95);
+          playNaturalTurkish("dogru");
         }
 
         setTimeout(() => {
           if (currentView === 'test') nextSmartQuizQuestion();
-        }, 1700);
+        }, 1900);
 
       } else {
-        // YANLIŞ CEVAP (TAKILMA TESPİTİ)
         st.wrong += 1;
         st.streak = 0;
-        st.box = 'struggling'; // Hemen sık sorulacaklar / takılınanlar kutusuna al
+        st.box = 'struggling';
         st.dailyHistory[today].w += 1;
 
-        // Hangi kelimeyle karıştırdığını kaydet
         const chosenItem = allCurriculumItems.find(i => i.id === chosenId);
         if (chosenItem) {
           st.confusedWith[chosenItem.word] = (st.confusedWith[chosenItem.word] || 0) + 1;
@@ -942,10 +970,11 @@
           btnEl.classList.add('border-rose-500', 'bg-rose-500/15', 'animate-shake');
         }
 
-        fb.textContent = `🤔 Tekrar dinleyip bulalım Nisa!`;
+        fb.textContent = `🤔 Tekrar tane tane dinleyip bulalım Nisa!`;
         fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-xs font-black text-center px-3 bg-rose-500/15 text-rose-600";
 
-        speakTurkish(currentQuizTarget.tts, 0.75);
+        // Yanlış yaptığında heceyi yavaş ve tane tane olan doğal sesle tekrar dinlet
+        playNaturalTurkish(currentQuizTarget.tts, true);
       }
     }
 
@@ -955,7 +984,7 @@
     }
 
     // ============================================================================
-    // 6. NİSA ÖZEL İSTATİSTİK & FARKLI GÜNLERDE TAKILMA ANALİZİ EKRANI
+    // 6. NİSA ÖZEL İSTATİSTİK EKRANI
     // ============================================================================
     function renderStatsDashboard() {
       let totalCorrect = 0;
@@ -984,7 +1013,6 @@
       document.getElementById('stat-struggling-count').textContent = strugglingArr.filter(x => x.st.box === 'struggling').length;
       document.getElementById('stat-mastered-count').textContent = masteredArr.length;
 
-      // En çok takıldıklarını hata sayısına ve farklı gün sayısına göre sırala
       strugglingArr.sort((a, b) => b.st.wrong - a.st.wrong);
 
       const strugContainer = document.getElementById('struggling-list');
@@ -996,11 +1024,9 @@
         `;
       } else {
         strugContainer.innerHTML = strugglingArr.map(({ item, st }) => {
-          // Kaç farklı günde hata yapmış?
           const wrongDays = Object.entries(st.dailyHistory || {}).filter(([_, val]) => val.w > 0);
           const isPersistentDayIssue = wrongDays.length >= 2;
 
-          // En çok hangi şıkla karıştırmış?
           const confusedEntries = Object.entries(st.confusedWith || {});
           const topConfused = confusedEntries.length > 0
             ? confusedEntries.sort((a, b) => b[1] - a[1])[0][0]
@@ -1013,7 +1039,7 @@
           return `
             <div class="p-3 rounded-2xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-between gap-2">
               <div class="flex items-center gap-3">
-                <button onclick="speakTurkish('${item.tts}')" class="w-12 h-12 rounded-2xl bg-[var(--card)] border border-[var(--border)] font-black text-xl flex items-center justify-center shadow-sm">
+                <button onclick="playNaturalTurkish('${item.tts}', true)" class="w-12 h-12 rounded-2xl bg-[var(--card)] border border-[var(--border)] font-black text-xl flex items-center justify-center shadow-sm">
                   ${coloredWord}
                 </button>
                 <div>
@@ -1038,7 +1064,6 @@
         }).join('');
       }
 
-      // Nadir Çıkarılacaklar Kutusu Listesi
       const mastContainer = document.getElementById('mastered-box-list');
       if (masteredArr.length === 0) {
         mastContainer.innerHTML = `
@@ -1056,7 +1081,6 @@
         `).join('');
       }
 
-      // Günlük Test Geçmişi
       const dailyContainer = document.getElementById('daily-log-container');
       const dayKeys = Object.keys(appState.dailyLogs || {}).sort().reverse();
       if (dayKeys.length === 0) {
