@@ -462,8 +462,8 @@
         return;
       }
 
-      // 2. Öncelik: Audio klasöründeki .m4a dosyası
-      const audioFileUrl = `audio/${lookupKey}.m4a`;
+      // 2. Öncelik: Audio klasöründeki .mp3 dosyası
+      const audioFileUrl = `audio/${lookupKey}.mp3`;
       activeAudioPlayer = new Audio(audioFileUrl);
       activeAudioPlayer.play().catch(() => {
         fallbackWebSpeechTurkish(key, useSlow);
