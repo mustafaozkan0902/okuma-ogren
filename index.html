@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>1. Sınıf İlk 4 Hafta: Hece Birleştir & Sesle Teyit Et</title>
+  <title>Nisa ile Okuma Öğreniyorum - MEB İlk 4 Hafta Akıllı Pratik & Test</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -36,16 +36,12 @@
     }
     .animate-pop { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-    @keyframes slideLeft {
-      0% { transform: translateX(-30px); opacity: 0; }
-      100% { transform: translateX(0); opacity: 1; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
     }
-    @keyframes slideRight {
-      0% { transform: translateX(30px); opacity: 0; }
-      100% { transform: translateX(0); opacity: 1; }
-    }
-    .slide-l { animation: slideLeft 0.35s ease-out; }
-    .slide-r { animation: slideRight 0.35s ease-out; }
+    .animate-shake { animation: shake 0.35s ease-in-out; }
 
     @keyframes pulseRing {
       0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
@@ -55,435 +51,460 @@
     .pulse-btn { animation: pulseRing 2s infinite; }
   </style>
 </head>
-<body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen">
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen pb-24">
 
   <!-- Mobil Uygulama Konteyneri -->
-  <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between pb-6">
+  <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between">
 
-    <!-- ÜST BAŞLIK & YILDIZ SAYACI -->
-    <header class="sticky top-0 z-30 bg-[var(--card)]/95 backdrop-blur border-b border-[var(--border)] px-4 py-3 flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-sm">
-          1.S
+    <!-- ÜST BAŞLIK & NİSA TEBRİK KONTROLÜ -->
+    <header class="sticky top-0 z-30 bg-[var(--card)]/95 backdrop-blur border-b border-[var(--border)] px-3.5 py-2.5 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-black text-base shadow-sm">
+          👧
         </div>
         <div>
-          <h1 class="font-extrabold text-sm leading-tight">Hece Birleştir & Oku</h1>
-          <p class="text-[11px] font-semibold text-blue-600 dark:text-blue-400">MEB İlk 4 Hafta Planı (A-N-E-T-İ)</p>
+          <h1 class="font-extrabold text-sm leading-tight">Nisa Okuma Dünyası</h1>
+          <p class="text-[10px] font-semibold text-blue-600 dark:text-blue-400">MEB İlk 4 Hafta Akıllı Sistem</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5 bg-amber-500/15 border border-amber-500/30 px-3 py-1.5 rounded-2xl">
-        <span class="text-base">⭐</span>
-        <span id="star-score" class="font-black text-amber-600 dark:text-amber-400 text-sm">0</span>
+      <div class="flex items-center gap-1.5">
+        <!-- "Tebrikler Nisa" Sesli Övgü Aç/Kapat -->
+        <button onclick="togglePraise()" id="praise-toggle-btn" title="Tebrikler Nisa sesini aç/kapat" class="px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold border transition flex items-center gap-1 bg-pink-500/15 border-pink-500/30 text-pink-600 dark:text-pink-400">
+          <span id="praise-icon">🗣️</span>
+          <span id="praise-label">Nisa: Açık</span>
+        </button>
+
+        <!-- Yıldız Sayacı -->
+        <div class="flex items-center gap-1 bg-amber-500/15 border border-amber-500/30 px-2.5 py-1.5 rounded-xl">
+          <span class="text-sm">⭐</span>
+          <span id="star-score" class="font-black text-amber-600 dark:text-amber-400 text-xs">0</span>
+        </div>
       </div>
     </header>
 
-    <!-- İLK 4 HAFTA SEÇİCİ SEKMELER -->
-    <div class="px-4 pt-3">
-      <div class="grid grid-cols-4 gap-1.5">
-        <button onclick="selectWeek(0)" id="week-btn-0" class="week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-blue-600 text-white border-blue-600 shadow-sm">
-          <div class="text-[10px] font-bold opacity-85">1. HAFTA</div>
-          <div class="text-sm font-black">A - N</div>
+    <!-- İLK 4 HAFTA SEÇİCİ SEKMELER (Çalışma ve Test için geçerli hafta) -->
+    <div id="week-selector-bar" class="px-4 pt-3">
+      <div class="grid grid-cols-5 gap-1">
+        <button onclick="selectWeek(0)" id="week-btn-0" class="week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-blue-600 text-white border-blue-600 shadow-sm">
+          <div class="text-[9px] font-bold opacity-85">1.HAFTA</div>
+          <div class="text-xs font-black">A - N</div>
         </button>
-        <button onclick="selectWeek(1)" id="week-btn-1" class="week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
-          <div class="text-[10px] font-bold text-[var(--muted-foreground)]">2. HAFTA</div>
-          <div class="text-sm font-black">E</div>
+        <button onclick="selectWeek(1)" id="week-btn-1" class="week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
+          <div class="text-[9px] font-bold text-[var(--muted-foreground)]">2.HAFTA</div>
+          <div class="text-xs font-black">E</div>
         </button>
-        <button onclick="selectWeek(2)" id="week-btn-2" class="week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
-          <div class="text-[10px] font-bold text-[var(--muted-foreground)]">3. HAFTA</div>
-          <div class="text-sm font-black">T</div>
+        <button onclick="selectWeek(2)" id="week-btn-2" class="week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
+          <div class="text-[9px] font-bold text-[var(--muted-foreground)]">3.HAFTA</div>
+          <div class="text-xs font-black">T</div>
         </button>
-        <button onclick="selectWeek(3)" id="week-btn-3" class="week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
-          <div class="text-[10px] font-bold text-[var(--muted-foreground)]">4. HAFTA</div>
-          <div class="text-sm font-black">İ</div>
+        <button onclick="selectWeek(3)" id="week-btn-3" class="week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
+          <div class="text-[9px] font-bold text-[var(--muted-foreground)]">4.HAFTA</div>
+          <div class="text-xs font-black">İ</div>
         </button>
-      </div>
-
-      <!-- Hafta Kazanım Özeti -->
-      <div id="week-info-banner" class="mt-2.5 px-3.5 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
-        <span id="week-desc" class="font-bold text-blue-700 dark:text-blue-300">Hedef Sesler: A, a, N, n → an, na, ana</span>
-        <span id="card-progress" class="font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px]">1 / 5</span>
+        <button onclick="selectWeek(4)" id="week-btn-4" class="week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]">
+          <div class="text-[9px] font-bold text-[var(--muted-foreground)]">KARMA</div>
+          <div class="text-xs font-black">TÜMÜ</div>
+        </button>
       </div>
     </div>
 
-    <!-- ANA ÇALIŞMA SAHNESİ (HECE BİRLEŞTİRME & TEYİT) -->
-    <main class="flex-1 px-4 py-3 flex flex-col justify-between space-y-3">
+    <!-- ANA İÇERİK BÖLÜMÜ -->
+    <main class="flex-1 px-4 py-3 space-y-3">
 
-      <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-3xl p-5 shadow-sm flex flex-col items-center justify-between space-y-4">
+      <!-- ========================================================= -->
+      <!-- MODÜL 1: HECE BİRLEŞTİR & SESLE TEYİT ET (ÇALIŞMA EKRANI) -->
+      <!-- ========================================================= -->
+      <section id="view-practice" class="space-y-3">
+        <div class="px-3.5 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
+          <span id="week-desc" class="font-bold text-blue-700 dark:text-blue-300">Hedef Sesler: A, a, N, n → an, na, ana</span>
+          <span id="card-progress" class="font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px]">1 / 5</span>
+        </div>
+
+        <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-3xl p-4 shadow-sm flex flex-col items-center space-y-3.5">
+          <div id="step-instruction" class="w-full py-1.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-extrabold text-center">
+            👀 1. Adım: Heceleri birleştirip yüksek sesle oku, sonra Ses tuşuyla teyit et!
+          </div>
+
+          <!-- Parçalar -->
+          <div class="w-full flex items-center justify-center gap-2 py-1">
+            <button onclick="speakPart(0)" class="px-4 py-3 rounded-2xl bg-rose-500/10 border-2 border-rose-500/30 active:scale-95 transition flex flex-col items-center min-w-[88px]">
+              <span id="part-1-text" class="text-3xl font-black syl-red tracking-wider">a</span>
+              <span class="text-[10px] font-bold text-rose-600/80 mt-1">🔊 1. Ses</span>
+            </button>
+
+            <span class="text-xl font-black text-[var(--muted-foreground)]">+</span>
+
+            <button onclick="speakPart(1)" class="px-4 py-3 rounded-2xl bg-blue-500/10 border-2 border-blue-500/30 active:scale-95 transition flex flex-col items-center min-w-[88px]">
+              <span id="part-2-text" class="text-3xl font-black syl-blue tracking-wider">n</span>
+              <span class="text-[10px] font-bold text-blue-600/80 mt-1">🔊 2. Ses</span>
+            </button>
+
+            <div id="part-3-wrapper" class="hidden items-center gap-2">
+              <span class="text-xl font-black text-[var(--muted-foreground)]">+</span>
+              <button onclick="speakPart(2)" class="px-3.5 py-3 rounded-2xl bg-rose-500/10 border-2 border-rose-500/30 active:scale-95 transition flex flex-col items-center min-w-[80px]">
+                <span id="part-3-text" class="text-3xl font-black syl-red tracking-wider">ne</span>
+                <span class="text-[10px] font-bold text-rose-600/80 mt-1">🔊 3. Ses</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="text-[11px] font-extrabold text-[var(--muted-foreground)]">⬇️ BİRLEŞTİR VE OKU ⬇️</div>
+
+          <!-- Birleşmiş Kutu -->
+          <div id="merged-card" onclick="verifyReading()" class="cursor-pointer w-full py-4 px-4 rounded-3xl bg-[var(--background)] border-2 border-dashed border-blue-500/50 flex flex-col items-center justify-center space-y-1.5 animate-pop">
+            <div id="merged-text" class="text-5xl font-black tracking-wide leading-none">
+              <span class="syl-red">a</span><span class="syl-blue">n</span>
+            </div>
+            <div id="meaning-reveal" class="hidden pt-1.5 flex flex-col items-center animate-pop">
+              <span id="meaning-emoji" class="text-2xl">⏱️</span>
+              <span id="meaning-hint" class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-0.5 rounded-full mt-0.5">
+                Örnek: 'Bir an dur.'
+              </span>
+            </div>
+          </div>
+
+          <!-- Sesle Teyit Butonu -->
+          <div class="w-full space-y-2">
+            <button id="verify-sound-btn" onclick="verifyReading()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-sm shadow-md flex items-center justify-center gap-2 active:scale-95 transition pulse-btn">
+              <span class="text-xl">🔊</span>
+              <span id="verify-btn-label">Sesle Teyit Et (Dinle)</span>
+            </button>
+
+            <div id="self-check-panel" class="hidden grid-cols-2 gap-2 pt-1 animate-pop">
+              <button onclick="repeatCurrentCard()" class="py-2.5 px-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-xs flex items-center justify-center gap-1 active:scale-95">
+                <span>🔄</span> Tekrar Çalış
+              </button>
+              <button onclick="confirmCorrectAndNext()" class="py-2.5 px-3 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow-sm active:scale-95">
+                <span>✅</span> Doğru Okudum!
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Haftanın Heceleri Hızlı Liste -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-3.5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-[var(--muted-foreground)]">📋 Haftanın Heceleri & Kelimeleri:</span>
+            <div class="flex gap-1.5">
+              <button onclick="prevCard()" class="px-2.5 py-1 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-bold active:scale-95">⬅️</button>
+              <button onclick="nextCard()" class="px-2.5 py-1 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-bold active:scale-95">➡️</button>
+            </div>
+          </div>
+          <div id="week-items-grid" class="grid grid-cols-4 gap-1.5"></div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================= -->
+      <!-- MODÜL 2: AKILLI MİNİK TEST (DİNLE & SEÇENEKLERDEN İŞARETLE) -->
+      <!-- ========================================================= -->
+      <section id="view-test" class="hidden space-y-3">
+        <!-- Test Üst Ayar Barı (2 veya 3 Seçenek & Kutu Durumu) -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-extrabold text-[var(--muted-foreground)]">Seçenek Sayısı:</span>
+            <button onclick="setOptionCount(2)" id="opt-cnt-2" class="px-2.5 py-1 rounded-xl text-xs font-black bg-blue-600 text-white">2 Seçenek</button>
+            <button onclick="setOptionCount(3)" id="opt-cnt-3" class="px-2.5 py-1 rounded-xl text-xs font-black bg-[var(--background)] border border-[var(--border)]">3 Seçenek</button>
+          </div>
+
+          <div id="quiz-item-box-badge" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
+            🎯 Akıllı Seçim
+          </div>
+        </div>
+
+        <!-- Test Ana Kartı -->
+        <div class="bg-[var(--card)] border-2 border-[var(--border)] rounded-3xl p-5 shadow-sm flex flex-col items-center space-y-4">
+          <div class="text-center space-y-1">
+            <div class="inline-block px-3 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-extrabold">
+              Önce Sesi Dinle, Sonra Doğru Olanı İşaretle!
+            </div>
+            <p id="quiz-history-hint" class="text-[11px] text-[var(--muted-foreground)] font-semibold">
+              Bu kelimeyi daha önce 0 kez çözdün.
+            </p>
+          </div>
+
+          <!-- Büyük Ses Dinleme Butonu -->
+          <button onclick="playCurrentQuizAudio()" class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white text-4xl flex flex-col items-center justify-center shadow-lg active:scale-90 transition pulse-btn">
+            <span>🔊</span>
+            <span class="text-[10px] font-extrabold mt-1">DİNLE</span>
+          </button>
+
+          <!-- 2 veya 3 Seçenekli Cevap Alanı -->
+          <div id="quiz-choices-container" class="w-full grid grid-cols-2 gap-3 pt-2">
+            <!-- JS ile 2 ya da 3 büyük kart olarak doldurulur -->
+          </div>
+
+          <!-- Geri Bildirim Mesajı -->
+          <div id="quiz-feedback-banner" class="w-full min-h-[42px] rounded-2xl flex items-center justify-center text-sm font-black text-center px-3">
+            <!-- Doğru / Yanlış mesajı -->
+          </div>
+
+          <button onclick="nextSmartQuizQuestion()" class="w-full py-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-extrabold text-[var(--muted-foreground)] active:scale-95">
+            ⏭️ Başka Soruya Geç
+          </button>
+        </div>
+
+        <!-- Akıllı Kutu Bilgilendirmesi -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3.5 text-xs space-y-1.5">
+          <div class="font-extrabold flex items-center gap-1.5">
+            <span>🧠</span> Akıllı Kutu Sistemi Nasıl Çalışır?
+          </div>
+          <p class="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+            • Nisa'nın zorlandığı veya yanlış işaretlediği heceler <strong>"Sık Sorulacaklar"</strong> kutusuna alınır ve farklı günlerde sıkça karşısına çıkar.<br>
+            • Üst üste <strong>3 kez doğru</strong> bildiği heceler ise otomatik olarak <strong>"Nadir Çıkarılacaklar (Öğrenildi) 📦"</strong> kutusuna atılır ve testlerde çok az (%10 ihtimalle) sorulur.
+          </p>
+        </div>
+      </section>
+
+
+      <!-- ========================================================= -->
+      <!-- MODÜL 3: NİSA ÖZEL İSTATİSTİK & GÜNLÜK TAKILMA ANALİZİ    -->
+      <!-- ========================================================= -->
+      <section id="view-stats" class="hidden space-y-3.5">
         
-        <!-- Adım Yönergesi -->
-        <div id="step-instruction" class="w-full py-1.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-extrabold text-center">
-          👀 1. Adım: Parçaları incele ve kendin okumaya çalış!
+        <!-- Genel Özet Kartları -->
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 text-center">
+            <div class="text-[10px] font-extrabold text-[var(--muted-foreground)]">TOPLAM TEST</div>
+            <div id="stat-total-tests" class="text-2xl font-black text-blue-600 mt-0.5">0</div>
+            <div id="stat-accuracy-rate" class="text-[10px] font-bold text-emerald-600">%0 Başarı</div>
+          </div>
+          <div class="bg-[var(--card)] border border-rose-500/30 rounded-2xl p-3 text-center">
+            <div class="text-[10px] font-extrabold text-rose-600">TAKILDIKLARI</div>
+            <div id="stat-struggling-count" class="text-2xl font-black text-rose-600 mt-0.5">0</div>
+            <div class="text-[10px] font-bold text-[var(--muted-foreground)]">Sık Soruluyor</div>
+          </div>
+          <div class="bg-[var(--card)] border border-emerald-500/30 rounded-2xl p-3 text-center">
+            <div class="text-[10px] font-extrabold text-emerald-600">NADİR KUTUSU</div>
+            <div id="stat-mastered-count" class="text-2xl font-black text-emerald-600 mt-0.5">0</div>
+            <div class="text-[10px] font-bold text-[var(--muted-foreground)]">Öğrenildi 📦</div>
+          </div>
         </div>
 
-        <!-- 1. BÖLÜM: PARÇALARI GÖR VE DİNLE -->
-        <div class="w-full flex items-center justify-center gap-2.5 py-2">
-          <!-- 1. Parça -->
-          <button onclick="speakPart(0)" class="group relative px-5 py-3.5 rounded-2xl bg-rose-500/10 border-2 border-rose-500/30 active:scale-95 transition slide-l flex flex-col items-center min-w-[95px]">
-            <span id="part-1-text" class="text-4xl font-black syl-red tracking-wider">a</span>
-            <span class="text-[10px] font-bold text-rose-600/80 mt-1 flex items-center gap-0.5">🔊 1. Ses</span>
-          </button>
-
-          <span class="text-2xl font-black text-[var(--muted-foreground)]">+</span>
-
-          <!-- 2. Parça -->
-          <button onclick="speakPart(1)" class="group relative px-5 py-3.5 rounded-2xl bg-blue-500/10 border-2 border-blue-500/30 active:scale-95 transition slide-r flex flex-col items-center min-w-[95px]">
-            <span id="part-2-text" class="text-4xl font-black syl-blue tracking-wider">n</span>
-            <span class="text-[10px] font-bold text-blue-600/80 mt-1 flex items-center gap-0.5">🔊 2. Ses</span>
-          </button>
-
-          <!-- Varsa 3. Parça (3 heceli kelimeler için) -->
-          <div id="part-3-wrapper" class="hidden items-center gap-2.5">
-            <span class="text-2xl font-black text-[var(--muted-foreground)]">+</span>
-            <button onclick="speakPart(2)" class="group relative px-4 py-3.5 rounded-2xl bg-rose-500/10 border-2 border-rose-500/30 active:scale-95 transition slide-r flex flex-col items-center min-w-[85px]">
-              <span id="part-3-text" class="text-4xl font-black syl-red tracking-wider">ne</span>
-              <span class="text-[10px] font-bold text-rose-600/80 mt-1 flex items-center gap-0.5">🔊 3. Ses</span>
+        <!-- 1. BÖLÜM: EN ÇOK TAKILDIĞI NOKTALAR & FARKLI GÜNLERDEKİ ANALİZ -->
+        <div class="bg-[var(--card)] border-2 border-rose-500/30 rounded-3xl p-4 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-extrabold text-sm text-rose-600 flex items-center gap-1.5">
+                <span>🚨</span> En Çok Takıldığı Hece & Kelimeler
+              </h2>
+              <p class="text-[11px] text-[var(--muted-foreground)]">Farklı günlerde yapılan testlerde hata yapılan noktalar</p>
+            </div>
+            <button onclick="startTargetedStruggleQuiz()" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white font-extrabold text-[11px] shadow-sm active:scale-95">
+              🎯 Sadece Bunları Sor
             </button>
           </div>
-        </div>
 
-        <!-- BİRLEŞME OKU -->
-        <div class="flex items-center gap-2 text-xs font-extrabold text-[var(--muted-foreground)]">
-          <span>⬇️</span>
-          <span>BİRLEŞTİR VE YÜKSEK SESLE OKU</span>
-          <span>⬇️</span>
-        </div>
-
-        <!-- 2. BÖLÜM: BİRLEŞMİŞ HECE / KELİME KUTUSU -->
-        <div id="merged-card" onclick="verifyReading()" class="cursor-pointer w-full py-5 px-4 rounded-3xl bg-[var(--background)] border-2 border-dashed border-blue-500/50 flex flex-col items-center justify-center space-y-2 animate-pop">
-          <div id="merged-text" class="text-6xl font-black tracking-wide leading-none">
-            <span class="syl-red">a</span><span class="syl-blue">n</span>
-          </div>
-          
-          <!-- Teyit Sonrası Açılan Anlam/İpucu Kutusu -->
-          <div id="meaning-reveal" class="hidden pt-2 flex flex-col items-center animate-pop">
-            <span id="meaning-emoji" class="text-3xl mb-1">👩</span>
-            <span id="meaning-hint" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">
-              "Anne" kelimesinin ilk hecesi
-            </span>
+          <div id="struggling-list" class="space-y-2">
+            <!-- JS ile doldurulur -->
           </div>
         </div>
 
-        <!-- 3. BÖLÜM: SES TUŞUNA BASIP TEYİT ETME -->
-        <div class="w-full space-y-2.5 pt-1">
-          <button id="verify-sound-btn" onclick="verifyReading()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-base shadow-lg flex items-center justify-center gap-2.5 active:scale-95 transition pulse-btn">
-            <span class="text-2xl">🔊</span>
-            <span id="verify-btn-label">Sesle Teyit Et (Dinle)</span>
-          </button>
+        <!-- 2. BÖLÜM: NADİR ÇIKARILACAKLAR KUTUSU (USTALAŞILANLAR) -->
+        <div class="bg-[var(--card)] border border-emerald-500/30 rounded-3xl p-4 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-extrabold text-sm text-emerald-600 flex items-center gap-1.5">
+                <span>📦</span> Nadir Çıkarılacaklar Kutusu (Öğrenilenler)
+              </h2>
+              <p class="text-[11px] text-[var(--muted-foreground)]">Üst üste 3+ kez doğru bilinenler (Artık çok nadir sorulur)</p>
+            </div>
+          </div>
 
-          <!-- Teyit Sonrası Çıkan Öz-Değerlendirme Butonları -->
-          <div id="self-check-panel" class="hidden grid-cols-2 gap-2.5 pt-1 animate-pop">
-            <button onclick="repeatCurrentCard()" class="py-3 px-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95">
-              <span>🔄</span> Tekrar Dinle & Çalış
-            </button>
-            <button onclick="confirmCorrectAndNext()" class="py-3 px-3 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-              <span>✅</span> Doğru Okudum! (+1⭐)
-            </button>
+          <div id="mastered-box-list" class="flex flex-wrap gap-1.5">
+            <!-- JS ile doldurulur -->
           </div>
         </div>
 
-      </div>
+        <!-- 3. BÖLÜM: GÜNLERE GÖRE TEST TAKİP GEÇMİŞİ (FARKLI GÜNLER KONTROLÜ) -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-4 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-extrabold text-sm flex items-center gap-1.5">
+                <span>📅</span> Günlere Göre Performans & Tekrar Eden Hatalar
+              </h2>
+              <p class="text-[11px] text-[var(--muted-foreground)]">Aynı kelimede farklı günlerde takılıyor mu?</p>
+            </div>
+            <!-- Veli/Öğretmen için farklı gün simülasyonu veya sıfırlama -->
+            <button onclick="resetAllStats()" class="text-[10px] font-bold text-rose-500 underline">İstatistiği Sıfırla</button>
+          </div>
 
-      <!-- BU HAFTANIN TÜM HECELERİ / KELİMELERİ HIZLI GEÇİŞ LİSTESİ -->
-      <div class="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-4 shadow-sm space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold text-[var(--muted-foreground)]">📋 Bu Haftanın Çalışma Listesi:</span>
-          <div class="flex gap-1.5">
-            <button onclick="prevCard()" class="px-2.5 py-1 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-bold active:scale-95">⬅️ Önceki</button>
-            <button onclick="nextCard()" class="px-2.5 py-1 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-bold active:scale-95">Sonraki ➡️</button>
+          <div id="daily-log-container" class="space-y-2">
+            <!-- JS ile doldurulur -->
           </div>
         </div>
 
-        <div id="week-items-grid" class="grid grid-cols-4 gap-2">
-          <!-- JS tarafından doldurulur -->
-        </div>
-      </div>
+      </section>
 
     </main>
+
+    <!-- ALT MOBİL NAVİGASYON BARI (3 ANA SEKME) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[var(--card)]/95 backdrop-blur border-t border-[var(--border)]">
+      <div class="max-w-md mx-auto grid grid-cols-3 px-3 py-1.5 gap-2">
+        <button onclick="switchMainView('practice')" id="nav-btn-practice" class=" flex flex-col items-center justify-center py-1.5 rounded-2xl text-blue-600 bg-blue-500/10 font-extrabold transition">
+          <span class="text-lg">📖</span>
+          <span class="text-[11px] mt-0.5">1. Çalış & Oku</span>
+        </button>
+        <button onclick="switchMainView('test')" id="nav-btn-test" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-[var(--muted-foreground)] font-bold transition relative">
+          <span class="text-lg">🎯</span>
+          <span class="text-[11px] mt-0.5">2. Minik Test</span>
+        </button>
+        <button onclick="switchMainView('stats')" id="nav-btn-stats" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-[var(--muted-foreground)] font-bold transition relative">
+          <span class="text-lg">📊</span>
+          <span class="text-[11px] mt-0.5">3. Nisa Raporu</span>
+        </button>
+      </div>
+    </nav>
+
   </div>
 
   <script>
-    // MEB Türkiye Yüzyılı Maarif Modeli - İlk 4 Haftalık Kademeli Hece ve Kelime Planı
+    // ============================================================================
+    // 1. MEB İLK 4 HAFTALIK MÜFREDAT VERİ SETİ (HER ÖĞENİN BENZERSİZ ID'Sİ VARDIR)
+    // ============================================================================
     const first4WeeksPlan = [
       {
         week: 1,
         title: "1. Hafta: A ve N Sesleri",
-        desc: "Hedef Sesler: A, a, N, n (Uyum + İlk Birleştirmeler)",
+        desc: "1. Hafta (A, N) → an, na, ana, nan",
         items: [
-          {
-            parts: ["a", "n"],
-            displayParts: [{ text: "a", color: "red" }, { text: "n", color: "blue" }],
-            word: "an",
-            tts: "an",
-            type: "Kapalı Hece",
-            emoji: "⏱️",
-            hint: "Örnek: 'Bir an dur.'"
-          },
-          {
-            parts: ["n", "a"],
-            displayParts: [{ text: "n", color: "red" }, { text: "a", color: "blue" }],
-            word: "na",
-            tts: "na",
-            type: "Açık Hece",
-            emoji: "🎵",
-            hint: "'Nane' kelimesinin ilk hecesi"
-          },
-          {
-            parts: ["a", "na"],
-            displayParts: [{ text: "a", color: "red" }, { text: "na", color: "blue" }],
-            word: "ana",
-            tts: "ana",
-            type: "Kelime",
-            emoji: "👩‍👧",
-            hint: "Anlamlı Kelime: Ana (Anne)"
-          },
-          {
-            parts: ["n", "a", "n"],
-            displayParts: [{ text: "n", color: "red" }, { text: "a", color: "blue" }, { text: "n", color: "red" }],
-            word: "nan",
-            tts: "nan",
-            type: "3 Sesli Hece",
-            emoji: "🥖",
-            hint: "3 sesin birleşimi: n-a-n"
-          },
-          {
-            parts: ["a", "n", "a"],
-            displayParts: [{ text: "a", color: "red" }, { text: "n", color: "blue" }, { text: "a", color: "red" }],
-            word: "ana",
-            tts: "ana",
-            type: "Harf Tekrarı",
-            emoji: "⭐",
-            hint: "Harfleri tek tek birleştir: a - n - a"
-          }
+          { id: "w1_an", week: 1, parts: ["a", "n"], displayParts: [{ text: "a", color: "red" }, { text: "n", color: "blue" }], word: "an", tts: "an", emoji: "⏱️", hint: "Örnek: 'Bir an dur.'" },
+          { id: "w1_na", week: 1, parts: ["n", "a"], displayParts: [{ text: "n", color: "red" }, { text: "a", color: "blue" }], word: "na", tts: "na", emoji: "🎵", hint: "'Nane' kelimesinin ilk hecesi" },
+          { id: "w1_ana", week: 1, parts: ["a", "na"], displayParts: [{ text: "a", color: "red" }, { text: "na", color: "blue" }], word: "ana", tts: "ana", emoji: "👩‍👧", hint: "Anlamlı Kelime: Ana (Anne)" },
+          { id: "w1_nan", week: 1, parts: ["n", "a", "n"], displayParts: [{ text: "n", color: "red" }, { text: "a", color: "blue" }, { text: "n", color: "red" }], word: "nan", tts: "nan", emoji: "🥖", hint: "3 sesin birleşimi: n-a-n" }
         ]
       },
       {
         week: 2,
-        title: "2. Hafta: E Sesi (A-N-E Birleştirmeleri)",
-        desc: "Hedef Ses: E, e → en, ne, anne, nane",
+        title: "2. Hafta: E Sesi (A-N-E)",
+        desc: "2. Hafta (E) → en, ne, anne, nane, ene, nene",
         items: [
-          {
-            parts: ["e", "n"],
-            displayParts: [{ text: "e", color: "red" }, { text: "n", color: "blue" }],
-            word: "en",
-            tts: "en",
-            type: "Kapalı Hece",
-            emoji: "🏆",
-            hint: "Örnek: 'En güzel resim.'"
-          },
-          {
-            parts: ["n", "e"],
-            displayParts: [{ text: "n", color: "red" }, { text: "e", color: "blue" }],
-            word: "ne",
-            tts: "ne",
-            type: "Açık Hece",
-            emoji: "❓",
-            hint: "Soru kelimesi: 'Bu ne?'"
-          },
-          {
-            parts: ["an", "ne"],
-            displayParts: [{ text: "an", color: "red" }, { text: "ne", color: "blue" }],
-            word: "anne",
-            tts: "anne",
-            type: "Kelime",
-            emoji: "👩",
-            hint: "Örnek Cümle: 'Anne elma al.'"
-          },
-          {
-            parts: ["na", "ne"],
-            displayParts: [{ text: "na", color: "red" }, { text: "ne", color: "blue" }],
-            word: "nane",
-            tts: "nane",
-            type: "Kelime",
-            emoji: "🌿",
-            hint: "Örnek Cümle: 'Anne nane kokla.'"
-          },
-          {
-            parts: ["e", "ne"],
-            displayParts: [{ text: "e", color: "red" }, { text: "ne", color: "blue" }],
-            word: "ene",
-            tts: "ene",
-            type: "Hece Pratiği",
-            emoji: "🔤",
-            hint: "Ses birleştirme: e + ne"
-          },
-          {
-            parts: ["ne", "ne"],
-            displayParts: [{ text: "ne", color: "red" }, { text: "ne", color: "blue" }],
-            word: "nene",
-            tts: "nene",
-            type: "Kelime",
-            emoji: "👵",
-            hint: "Anlamlı Kelime: Nene (Nine)"
-          }
+          { id: "w2_en", week: 2, parts: ["e", "n"], displayParts: [{ text: "e", color: "red" }, { text: "n", color: "blue" }], word: "en", tts: "en", emoji: "🏆", hint: "Örnek: 'En güzel resim.'" },
+          { id: "w2_ne", week: 2, parts: ["n", "e"], displayParts: [{ text: "n", color: "red" }, { text: "e", color: "blue" }], word: "ne", tts: "ne", emoji: "❓", hint: "Soru kelimesi: 'Bu ne?'" },
+          { id: "w2_anne", week: 2, parts: ["an", "ne"], displayParts: [{ text: "an", color: "red" }, { text: "ne", color: "blue" }], word: "anne", tts: "anne", emoji: "👩", hint: "Örnek: 'Anne elma al.'" },
+          { id: "w2_nane", week: 2, parts: ["na", "ne"], displayParts: [{ text: "na", color: "red" }, { text: "ne", color: "blue" }], word: "nane", tts: "nane", emoji: "🌿", hint: "Örnek: 'Anne nane al.'" },
+          { id: "w2_ene", week: 2, parts: ["e", "ne"], displayParts: [{ text: "e", color: "red" }, { text: "ne", color: "blue" }], word: "ene", tts: "ene", emoji: "🔤", hint: "Ses birleştirme: e + ne" },
+          { id: "w2_nene", week: 2, parts: ["ne", "ne"], displayParts: [{ text: "ne", color: "red" }, { text: "ne", color: "blue" }], word: "nene", tts: "nene", emoji: "👵", hint: "Anlamlı Kelime: Nene" }
         ]
       },
       {
         week: 3,
-        title: "3. Hafta: T Sesi (A-N-E-T Birleştirmeleri)",
-        desc: "Hedef Ses: T, t → at, ta, et, te, ata, tane, anten",
+        title: "3. Hafta: T Sesi (A-N-E-T)",
+        desc: "3. Hafta (T) → at, ta, et, te, ata, tane, anten",
         items: [
-          {
-            parts: ["a", "t"],
-            displayParts: [{ text: "a", color: "red" }, { text: "t", color: "blue" }],
-            word: "at",
-            tts: "at",
-            type: "Kapalı Hece",
-            emoji: "🐎",
-            hint: "Anlamlı Kelime: At / Topu at"
-          },
-          {
-            parts: ["t", "a"],
-            displayParts: [{ text: "t", color: "red" }, { text: "a", color: "blue" }],
-            word: "ta",
-            tts: "ta",
-            type: "Açık Hece",
-            emoji: "🎯",
-            hint: "'Tane' kelimesinin ilk hecesi"
-          },
-          {
-            parts: ["e", "t"],
-            displayParts: [{ text: "e", color: "red" }, { text: "t", color: "blue" }],
-            word: "et",
-            tts: "et",
-            type: "Kapalı Hece",
-            emoji: "🥩",
-            hint: "Örnek: 'Yardım et.'"
-          },
-          {
-            parts: ["t", "e"],
-            displayParts: [{ text: "t", color: "red" }, { text: "e", color: "blue" }],
-            word: "te",
-            tts: "te",
-            type: "Açık Hece",
-            emoji: "🔔",
-            hint: "t ve e seslerinin birleşimi"
-          },
-          {
-            parts: ["a", "ta"],
-            displayParts: [{ text: "a", color: "red" }, { text: "ta", color: "blue" }],
-            word: "ata",
-            tts: "ata",
-            type: "Kelime",
-            emoji: "🏇",
-            hint: "Örnek: 'Ata ot at.'"
-          },
-          {
-            parts: ["ta", "ne"],
-            displayParts: [{ text: "ta", color: "red" }, { text: "ne", color: "blue" }],
-            word: "tane",
-            tts: "tane",
-            type: "Kelime",
-            emoji: "🍇",
-            hint: "Örnek: 'Tane tane oku.'"
-          },
-          {
-            parts: ["at", "ta"],
-            displayParts: [{ text: "at", color: "red" }, { text: "ta", color: "blue" }],
-            word: "atta",
-            tts: "atta",
-            type: "Kelime",
-            emoji: "👟",
-            hint: "Hece birleştirme: at + ta"
-          },
-          {
-            parts: ["an", "ten"],
-            displayParts: [{ text: "an", color: "red" }, { text: "ten", color: "blue" }],
-            word: "anten",
-            tts: "anten",
-            type: "Kelime",
-            emoji: "📡",
-            hint: "Anlamlı Kelime: Anten"
-          }
+          { id: "w3_at", week: 3, parts: ["a", "t"], displayParts: [{ text: "a", color: "red" }, { text: "t", color: "blue" }], word: "at", tts: "at", emoji: "🐎", hint: "Anlamlı Kelime: At" },
+          { id: "w3_ta", week: 3, parts: ["t", "a"], displayParts: [{ text: "t", color: "red" }, { text: "a", color: "blue" }], word: "ta", tts: "ta", emoji: "🎯", hint: "'Tane' kelimesinin ilk hecesi" },
+          { id: "w3_et", week: 3, parts: ["e", "t"], displayParts: [{ text: "e", color: "red" }, { text: "t", color: "blue" }], word: "et", tts: "et", emoji: "🥩", hint: "Örnek: 'Yardım et.'" },
+          { id: "w3_te", week: 3, parts: ["t", "e"], displayParts: [{ text: "t", color: "red" }, { text: "e", color: "blue" }], word: "te", tts: "te", emoji: "🔔", hint: "t ve e birleşimi" },
+          { id: "w3_ata", week: 3, parts: ["a", "ta"], displayParts: [{ text: "a", color: "red" }, { text: "ta", color: "blue" }], word: "ata", tts: "ata", emoji: "🏇", hint: "Örnek: 'Ata bak.'" },
+          { id: "w3_tane", week: 3, parts: ["ta", "ne"], displayParts: [{ text: "ta", color: "red" }, { text: "ne", color: "blue" }], word: "tane", tts: "tane", emoji: "🍇", hint: "Örnek: 'İki tane al.'" },
+          { id: "w3_anten", week: 3, parts: ["an", "ten"], displayParts: [{ text: "an", color: "red" }, { text: "ten", color: "blue" }], word: "anten", tts: "anten", emoji: "📡", hint: "Anlamlı Kelime: Anten" }
         ]
       },
       {
         week: 4,
-        title: "4. Hafta: İ Sesi (A-N-E-T-İ Birleştirmeleri)",
-        desc: "Hedef Ses: İ, i → in, ni, it, ti, ani, nine, inat",
+        title: "4. Hafta: İ Sesi (A-N-E-T-İ)",
+        desc: "4. Hafta (İ) → in, ni, it, ti, nine, ani, inat, anneni",
         items: [
-          {
-            parts: ["i", "n"],
-            displayParts: [{ text: "i", color: "red" }, { text: "n", color: "blue" }],
-            word: "in",
-            tts: "in",
-            type: "Kapalı Hece",
-            emoji: "⬇️",
-            hint: "Örnek: 'Aşağı in.'"
-          },
-          {
-            parts: ["n", "i"],
-            displayParts: [{ text: "n", color: "red" }, { text: "i", color: "blue" }],
-            word: "ni",
-            tts: "ni",
-            type: "Açık Hece",
-            emoji: "👵",
-            hint: "'Nine' kelimesinin ilk hecesi"
-          },
-          {
-            parts: ["i", "t"],
-            displayParts: [{ text: "i", color: "red" }, { text: "t", color: "blue" }],
-            word: "it",
-            tts: "it",
-            type: "Kapalı Hece",
-            emoji: "👐",
-            hint: "Örnek: 'Kapıyı it.'"
-          },
-          {
-            parts: ["t", "i"],
-            displayParts: [{ text: "t", color: "red" }, { text: "i", color: "blue" }],
-            word: "ti",
-            tts: "ti",
-            type: "Açık Hece",
-            emoji: "🎵",
-            hint: "t ve i seslerinin birleşimi"
-          },
-          {
-            parts: ["ni", "ne"],
-            displayParts: [{ text: "ni", color: "red" }, { text: "ne", color: "blue" }],
-            word: "nine",
-            tts: "nine",
-            type: "Kelime",
-            emoji: "👵",
-            hint: "Örnek: 'Nine nane al.'"
-          },
-          {
-            parts: ["a", "ni"],
-            displayParts: [{ text: "a", color: "red" }, { text: "ni", color: "blue" }],
-            word: "ani",
-            tts: "ani",
-            type: "Kelime",
-            emoji: "⚡",
-            hint: "Anlamlı Kelime: Ani"
-          },
-          {
-            parts: ["i", "nat"],
-            displayParts: [{ text: "i", color: "red" }, { text: "nat", color: "blue" }],
-            word: "inat",
-            tts: "inat",
-            type: "Kelime",
-            emoji: "🐐",
-            hint: "Örnek: 'İnat etme.'"
-          },
-          {
-            parts: ["an", "ne", "ni"],
-            displayParts: [{ text: "an", color: "red" }, { text: "ne", color: "blue" }, { text: "ni", color: "red" }],
-            word: "anneni",
-            tts: "anneni",
-            type: "3 Heceli Kelime",
-            emoji: "❤️",
-            hint: "Örnek: 'Anneni dinle.'"
-          }
+          { id: "w4_in", week: 4, parts: ["i", "n"], displayParts: [{ text: "i", color: "red" }, { text: "n", color: "blue" }], word: "in", tts: "in", emoji: "⬇️", hint: "Örnek: 'Aşağı in.'" },
+          { id: "w4_ni", week: 4, parts: ["n", "i"], displayParts: [{ text: "n", color: "red" }, { text: "i", color: "blue" }], word: "ni", tts: "ni", emoji: "👵", hint: "'Nine' kelimesinin ilk hecesi" },
+          { id: "w4_it", week: 4, parts: ["i", "t"], displayParts: [{ text: "i", color: "red" }, { text: "t", color: "blue" }], word: "it", tts: "it", emoji: "👐", hint: "Örnek: 'Kapıyı it.'" },
+          { id: "w4_ti", week: 4, parts: ["t", "i"], displayParts: [{ text: "t", color: "red" }, { text: "i", color: "blue" }], word: "ti", tts: "ti", emoji: "🎵", hint: "t ve i birleşimi" },
+          { id: "w4_nine", week: 4, parts: ["ni", "ne"], displayParts: [{ text: "ni", color: "red" }, { text: "ne", color: "blue" }], word: "nine", tts: "nine", emoji: "👵", hint: "Örnek: 'Nine nane al.'" },
+          { id: "w4_ani", week: 4, parts: ["a", "ni"], displayParts: [{ text: "a", color: "red" }, { text: "ni", color: "blue" }], word: "ani", tts: "ani", emoji: "⚡", hint: "Anlamlı Kelime: Ani" },
+          { id: "w4_inat", week: 4, parts: ["i", "nat"], displayParts: [{ text: "i", color: "red" }, { text: "nat", color: "blue" }], word: "inat", tts: "inat", emoji: "🐐", hint: "Örnek: 'İnat etme.'" },
+          { id: "w4_anneni", week: 4, parts: ["an", "ne", "ni"], displayParts: [{ text: "an", color: "red" }, { text: "ne", color: "blue" }, { text: "ni", color: "red" }], word: "anneni", tts: "anneni", emoji: "❤️", hint: "Örnek: 'Anneni dinle.'" }
         ]
       }
     ];
 
-    let activeWeekIdx = 0;
-    let activeCardIdx = 0;
-    let stars = 0;
-    let completedSet = new Set();
+    // Tüm öğelerin düz listesi
+    const allCurriculumItems = first4WeeksPlan.flatMap(w => w.items);
 
-    function speakTurkish(text, rate = 0.82) {
+    // ============================================================================
+    // 2. NİSA ÖZEL AKILLI İSTATİSTİK & LEITNER KUTU SİSTEMİ (LOCALSTORAGE)
+    // ============================================================================
+    const STORAGE_KEY = "nisa_okuma_akilli_veri_v1";
+
+    let appState = {
+      stars: 0,
+      praiseNisaEnabled: true,
+      optionCount: 2, // 2 ya da 3 seçenek
+      itemStats: {},  // { [id]: { correct, wrong, streak, box: 'learning'|'struggling'|'mastered', dailyHistory: { 'YYYY-MM-DD': {c, w} }, confusedWith: {} } }
+      dailyLogs: {}   // { 'YYYY-MM-DD': { total, correct, wrong, wrongItems: [] } }
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.error("Veri okunamadı:", e);
+      }
+      document.getElementById('star-score').textContent = appState.stars || 0;
+      updatePraiseButtonUI();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.error("Veri kaydedilemedi:", e);
+      }
+    }
+
+    function getTodayDateStr() {
+      const d = new Date();
+      return d.toISOString().split('T')[0]; // YYYY-MM-DD
+    }
+
+    function ensureItemStat(itemId) {
+      if (!appState.itemStats[itemId]) {
+        appState.itemStats[itemId] = {
+          correct: 0,
+          wrong: 0,
+          streak: 0,
+          box: "learning", // 'struggling' (Takıldığı) | 'learning' (Normal) | 'mastered' (Nadir Çıkarılacaklar Kutusu)
+          dailyHistory: {}, // { '2026-10-27': { c: 1, w: 2 } }
+          confusedWith: {}  // Hangi şıkla karıştırdı?
+        };
+      }
+      return appState.itemStats[itemId];
+    }
+
+    // "Tebrikler Nisa" Sesli Övgü Aç/Kapat
+    function togglePraise() {
+      appState.praiseNisaEnabled = !appState.praiseNisaEnabled;
+      saveState();
+      updatePraiseButtonUI();
+      if (appState.praiseNisaEnabled) {
+        speakTurkish("Tebrikler Nisa özelliği açıldı", 0.95);
+      }
+    }
+
+    function updatePraiseButtonUI() {
+      const btn = document.getElementById('praise-toggle-btn');
+      const label = document.getElementById('praise-label');
+      const icon = document.getElementById('praise-icon');
+      if (appState.praiseNisaEnabled) {
+        btn.className = "px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold border transition flex items-center gap-1 bg-pink-500/15 border-pink-500/30 text-pink-600 dark:text-pink-400";
+        icon.textContent = "🗣️";
+        label.textContent = "Nisa: Açık";
+      } else {
+        btn.className = "px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold border transition flex items-center gap-1 bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]";
+        icon.textContent = "🔇";
+        label.textContent = "Nisa: Kapalı";
+      }
+    }
+
+    // ============================================================================
+    // 3. TÜRKÇE SESLENDİRME MOTORU
+    // ============================================================================
+    function speakTurkish(text, rate = 0.84) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
@@ -501,30 +522,70 @@
       window.speechSynthesis.speak(utter);
     }
 
+    // ============================================================================
+    // 4. AKTİF HAFTA VE ÇALIŞMA MODÜLÜ
+    // ============================================================================
+    let activeWeekIdx = 0; // 0,1,2,3 (Haftalar) veya 4 (Tümü/Karma)
+    let activeCardIdx = 0;
+    let currentView = "practice";
+
+    function getActivePool() {
+      if (activeWeekIdx === 4) {
+        return allCurriculumItems;
+      }
+      return first4WeeksPlan[activeWeekIdx].items;
+    }
+
     function selectWeek(wIdx) {
       activeWeekIdx = wIdx;
       activeCardIdx = 0;
 
-      document.querySelectorAll('.week-btn').forEach((btn, i) => {
+      for (let i = 0; i <= 4; i++) {
+        const btn = document.getElementById('week-btn-' + i);
         if (i === wIdx) {
-          btn.className = "week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-blue-600 text-white border-blue-600 shadow-sm";
-          btn.children[0].className = "text-[10px] font-bold opacity-85";
+          btn.className = "week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-blue-600 text-white border-blue-600 shadow-sm";
+          btn.children[0].className = "text-[9px] font-bold opacity-85";
         } else {
-          btn.className = "week-btn py-2 px-1 rounded-2xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]";
-          btn.children[0].className = "text-[10px] font-bold text-[var(--muted-foreground)]";
+          btn.className = "week-btn py-1.5 px-1 rounded-xl border-2 text-center transition-all bg-[var(--card)] border-[var(--border)]";
+          btn.children[0].className = "text-[9px] font-bold text-[var(--muted-foreground)]";
+        }
+      }
+
+      renderCurrentCard();
+      if (currentView === 'test') {
+        nextSmartQuizQuestion();
+      }
+    }
+
+    function switchMainView(viewName) {
+      currentView = viewName;
+      ['practice', 'test', 'stats'].forEach(v => {
+        const sec = document.getElementById('view-' + v);
+        const nav = document.getElementById('nav-btn-' + v);
+        if (v === viewName) {
+          sec.classList.remove('hidden');
+          nav.className = "flex flex-col items-center justify-center py-1.5 rounded-2xl text-blue-600 bg-blue-500/10 font-extrabold transition";
+        } else {
+          sec.classList.add('hidden');
+          nav.className = "flex flex-col items-center justify-center py-1.5 rounded-2xl text-[var(--muted-foreground)] font-bold transition";
         }
       });
 
-      renderCurrentCard();
-      renderWeekGrid();
+      if (viewName === 'test') {
+        nextSmartQuizQuestion();
+      } else if (viewName === 'stats') {
+        renderStatsDashboard();
+      }
     }
 
     function renderCurrentCard() {
-      const weekObj = first4WeeksPlan[activeWeekIdx];
-      const item = weekObj.items[activeCardIdx];
+      const pool = getActivePool();
+      if (activeCardIdx >= pool.length) activeCardIdx = 0;
+      const item = pool[activeCardIdx];
 
-      document.getElementById('week-desc').textContent = weekObj.desc;
-      document.getElementById('card-progress').textContent = `${activeCardIdx + 1} / ${weekObj.items.length}`;
+      const descText = activeWeekIdx === 4 ? "Karma: İlk 4 Haftanın Tüm Heceleri" : first4WeeksPlan[activeWeekIdx].desc;
+      document.getElementById('week-desc').textContent = descText;
+      document.getElementById('card-progress').textContent = `${activeCardIdx + 1} / ${pool.length}`;
 
       const inst = document.getElementById('step-instruction');
       inst.className = "w-full py-1.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-extrabold text-center";
@@ -565,14 +626,16 @@
     }
 
     function speakPart(partIdx) {
-      const item = first4WeeksPlan[activeWeekIdx].items[activeCardIdx];
+      const pool = getActivePool();
+      const item = pool[activeCardIdx];
       if (item && item.parts[partIdx]) {
         speakTurkish(item.parts[partIdx], 0.8);
       }
     }
 
     function verifyReading() {
-      const item = first4WeeksPlan[activeWeekIdx].items[activeCardIdx];
+      const pool = getActivePool();
+      const item = pool[activeCardIdx];
       if (!item) return;
 
       speakTurkish(item.tts, 0.8);
@@ -598,29 +661,33 @@
     }
 
     function repeatCurrentCard() {
-      const item = first4WeeksPlan[activeWeekIdx].items[activeCardIdx];
+      const pool = getActivePool();
+      const item = pool[activeCardIdx];
       speakTurkish(item.tts, 0.72);
     }
 
     function confirmCorrectAndNext() {
-      const key = `${activeWeekIdx}-${activeCardIdx}`;
-      if (!completedSet.has(key)) {
-        completedSet.add(key);
-        stars += 1;
-        document.getElementById('star-score').textContent = stars;
+      appState.stars += 1;
+      document.getElementById('star-score').textContent = appState.stars;
+      saveState();
+
+      if (appState.praiseNisaEnabled) {
+        speakTurkish("Tebrikler Nisa!", 0.95);
+        setTimeout(() => nextCard(), 1100);
+      } else {
+        nextCard();
       }
-      nextCard();
     }
 
     function nextCard() {
-      const items = first4WeeksPlan[activeWeekIdx].items;
-      activeCardIdx = (activeCardIdx + 1) % items.length;
+      const pool = getActivePool();
+      activeCardIdx = (activeCardIdx + 1) % pool.length;
       renderCurrentCard();
     }
 
     function prevCard() {
-      const items = first4WeeksPlan[activeWeekIdx].items;
-      activeCardIdx = (activeCardIdx - 1 + items.length) % items.length;
+      const pool = getActivePool();
+      activeCardIdx = (activeCardIdx - 1 + pool.length) % pool.length;
       renderCurrentCard();
     }
 
@@ -630,30 +697,417 @@
     }
 
     function renderWeekGrid() {
-      const items = first4WeeksPlan[activeWeekIdx].items;
+      const pool = getActivePool();
       const grid = document.getElementById('week-items-grid');
 
-      grid.innerHTML = items.map((it, idx) => {
+      grid.innerHTML = pool.map((it, idx) => {
         const isCurrent = idx === activeCardIdx;
-        const isDone = completedSet.has(`${activeWeekIdx}-${idx}`);
+        const st = appState.itemStats[it.id];
+        const isMastered = st && st.box === 'mastered';
+        const isStruggling = st && st.box === 'struggling';
+
         const coloredWord = it.displayParts.map(dp =>
           `<span class="${dp.color === 'red' ? 'syl-red' : 'syl-blue'}">${dp.text}</span>`
         ).join('');
 
         let borderCls = "border-[var(--border)] bg-[var(--background)]";
         if (isCurrent) borderCls = "border-blue-600 ring-2 ring-blue-500/25 bg-blue-500/5";
-        else if (isDone) borderCls = "border-emerald-500/40 bg-emerald-500/5";
+        else if (isStruggling) borderCls = "border-rose-500/50 bg-rose-500/5";
+        else if (isMastered) borderCls = "border-emerald-500/50 bg-emerald-500/5";
+
+        let badge = "";
+        if (isMastered) badge = `<span class="absolute -top-1.5 -right-1.5 text-[10px] bg-emerald-500 text-white rounded-full w-4 h-4 flex items-center justify-center">📦</span>`;
+        else if (isStruggling) badge = `<span class="absolute -top-1.5 -right-1.5 text-[10px] bg-rose-500 text-white rounded-full w-4 h-4 flex items-center justify-center">!</span>`;
 
         return `
-          <button onclick="jumpToCard(${idx})" class="relative py-2.5 px-2 rounded-2xl border-2 ${borderCls} font-black text-base flex items-center justify-center active:scale-95 transition">
+          <button onclick="jumpToCard(${idx})" class="relative py-2 px-1.5 rounded-2xl border-2 ${borderCls} font-black text-sm flex items-center justify-center active:scale-95 transition">
             <span>${coloredWord}</span>
-            ${isDone ? '<span class="absolute -top-1.5 -right-1.5 text-[11px] bg-emerald-500 text-white rounded-full w-4 h-4 flex items-center justify-center">✓</span>' : ''}
+            ${badge}
           </button>
         `;
       }).join('');
     }
 
+    // ============================================================================
+    // 5. AKILLI MİNİK TEST MOTORU (SPACED REPETITION / NADİR KUTUSU DESTEKLİ)
+    // ============================================================================
+    let currentQuizTarget = null;
+    let currentQuizAnswered = false;
+    let forceStrugglingOnly = false;
+
+    function setOptionCount(cnt) {
+      appState.optionCount = cnt;
+      saveState();
+      document.getElementById('opt-cnt-2').className = cnt === 2
+        ? "px-2.5 py-1 rounded-xl text-xs font-black bg-blue-600 text-white"
+        : "px-2.5 py-1 rounded-xl text-xs font-black bg-[var(--background)] border border-[var(--border)]";
+      document.getElementById('opt-cnt-3').className = cnt === 3
+        ? "px-2.5 py-1 rounded-xl text-xs font-black bg-blue-600 text-white"
+        : "px-2.5 py-1 rounded-xl text-xs font-black bg-[var(--background)] border border-[var(--border)]";
+
+      nextSmartQuizQuestion();
+    }
+
+    // Akıllı Ağırlıklı Soru Seçici:
+    // - Takıldığı kelimeler (box === 'struggling') -> Çok yüksek ağırlık (Weight: 12)
+    // - Yeni / Öğrenmekte olduğu kelimeler (box === 'learning') -> Normal ağırlık (Weight: 5)
+    // - Nadir Çıkarılacaklar Kutusu (box === 'mastered') -> Çok düşük ağırlık (Weight: 0.6 -> Nadir çıkar)
+    function pickSmartItem(pool) {
+      if (forceStrugglingOnly) {
+        const strugglingItems = allCurriculumItems.filter(it => {
+          const st = appState.itemStats[it.id];
+          return st && (st.box === 'struggling' || st.wrong > 0);
+        });
+        if (strugglingItems.length > 0) {
+          pool = strugglingItems;
+        }
+        forceStrugglingOnly = false;
+      }
+
+      const weightedList = pool.map(item => {
+        const st = ensureItemStat(item.id);
+        let weight = 5;
+        if (st.box === 'struggling') {
+          weight = 14 + (st.wrong * 3); // En çok takıldıklarını önceliklendir
+        } else if (st.box === 'mastered') {
+          weight = 0.5; // Nadir çıkarılacaklar kutusundakileri çok az çıkar
+        } else if (st.correct === 0 && st.wrong === 0) {
+          weight = 7; // Hiç sorulmamışları keşfet
+        }
+
+        // Aynı soru üst üste gelmesin
+        if (currentQuizTarget && currentQuizTarget.id === item.id && pool.length > 1) {
+          weight = 0.05;
+        }
+        return { item, weight };
+      });
+
+      const totalWeight = weightedList.reduce((acc, el) => acc + el.weight, 0);
+      let rnd = Math.random() * totalWeight;
+      for (const el of weightedList) {
+        rnd -= el.weight;
+        if (rnd <= 0) return el.item;
+      }
+      return pool[0];
+    }
+
+    function nextSmartQuizQuestion() {
+      currentQuizAnswered = false;
+      const pool = getActivePool();
+      const target = pickSmartItem(pool);
+      currentQuizTarget = target;
+
+      const st = ensureItemStat(target.id);
+
+      // Kutu rozetini güncelle
+      const badgeEl = document.getElementById('quiz-item-box-badge');
+      if (st.box === 'struggling') {
+        badgeEl.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-600";
+        badgeEl.textContent = "🚨 Takıldığı Hece Tekrarı";
+      } else if (st.box === 'mastered') {
+        badgeEl.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600";
+        badgeEl.textContent = "📦 Nadir Kutusu Kontrolü";
+      } else {
+        badgeEl.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-600";
+        badgeEl.textContent = "🎯 Öğrenme Kutusu";
+      }
+
+      const dayCount = Object.keys(st.dailyHistory || {}).length;
+      document.getElementById('quiz-history-hint').textContent =
+        `Geçmiş: ${st.correct} Doğru, ${st.wrong} Yanlış (${dayCount} farklı günde soruldu)`;
+
+      // Çeldirici seçenekleri hazırla (Özellikle ters heceleri veya benzer sesleri seçer: örn 'an' için 'na')
+      const distractorPool = allCurriculumItems.filter(it => it.id !== target.id);
+      distractorPool.sort((a, b) => {
+        const aSameWeek = a.week === target.week ? 0 : 1;
+        const bSameWeek = b.week === target.week ? 0 : 1;
+        return aSameWeek - bSameWeek || (0.5 - Math.random());
+      });
+
+      const neededDistractors = (appState.optionCount || 2) - 1;
+      const distractors = distractorPool.slice(0, neededDistractors);
+      const choices = [target, ...distractors].sort(() => 0.5 - Math.random());
+
+      const container = document.getElementById('quiz-choices-container');
+      container.className = choices.length === 3
+        ? "w-full grid grid-cols-3 gap-2.5 pt-2"
+        : "w-full grid grid-cols-2 gap-3.5 pt-2";
+
+      container.innerHTML = choices.map(ch => {
+        const colored = ch.displayParts.map(dp =>
+          `<span class="${dp.color === 'red' ? 'syl-red' : 'syl-blue'}">${dp.text}</span>`
+        ).join('');
+        return `
+          <button onclick="submitQuizChoice('${ch.id}')" id="qchoice-${ch.id}" class="py-5 px-2 rounded-3xl bg-[var(--background)] border-2 border-[var(--border)] hover:border-blue-500 font-black text-3xl flex items-center justify-center shadow-sm active:scale-95 transition">
+            <span>${colored}</span>
+          </button>
+        `;
+      }).join('');
+
+      const fb = document.getElementById('quiz-feedback-banner');
+      fb.textContent = "";
+      fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-sm font-black text-center px-3";
+
+      // Otomatik olarak sesi çal (Önce dinlesin)
+      setTimeout(() => playCurrentQuizAudio(), 250);
+    }
+
+    function playCurrentQuizAudio() {
+      if (currentQuizTarget) {
+        speakTurkish(currentQuizTarget.tts, 0.8);
+      }
+    }
+
+    function submitQuizChoice(chosenId) {
+      if (currentQuizAnswered || !currentQuizTarget) return;
+
+      const today = getTodayDateStr();
+      const st = ensureItemStat(currentQuizTarget.id);
+      if (!st.dailyHistory[today]) {
+        st.dailyHistory[today] = { c: 0, w: 0 };
+      }
+      if (!appState.dailyLogs[today]) {
+        appState.dailyLogs[today] = { total: 0, correct: 0, wrong: 0, wrongItems: [] };
+      }
+
+      const fb = document.getElementById('quiz-feedback-banner');
+      const btnEl = document.getElementById('qchoice-' + chosenId);
+
+      if (chosenId === currentQuizTarget.id) {
+        // DOĞRU CEVAP
+        currentQuizAnswered = true;
+        st.correct += 1;
+        st.streak += 1;
+        st.dailyHistory[today].c += 1;
+
+        appState.dailyLogs[today].total += 1;
+        appState.dailyLogs[today].correct += 1;
+        appState.stars += 2;
+        document.getElementById('star-score').textContent = appState.stars;
+
+        // Kutu Güncellemesi: Üst üste 3 doğru bildiyse "Nadir Çıkarılacaklar Kutusu"na (mastered) at!
+        let movedToMastered = false;
+        if (st.streak >= 3 && st.box !== 'mastered') {
+          st.box = 'mastered';
+          movedToMastered = true;
+        } else if (st.box === 'struggling' && st.streak >= 2) {
+          st.box = 'learning';
+        }
+
+        saveState();
+
+        if (btnEl) {
+          btnEl.classList.add('border-emerald-500', 'bg-emerald-500/15', 'animate-pop');
+        }
+
+        const praiseMsg = movedToMastered
+          ? "🎉 Tebrikler Nisa! Bunu tam öğrendin, Nadir Kutusuna eklendi! 📦"
+          : (appState.praiseNisaEnabled ? "🌟 Tebrikler Nisa! Çok doğru bildin! (+2⭐)" : "✅ Harika! Doğru Cevap! (+2⭐)");
+
+        fb.textContent = praiseMsg;
+        fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-xs font-black text-center px-3 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 animate-pop";
+
+        if (appState.praiseNisaEnabled) {
+          speakTurkish("Tebrikler Nisa!", 0.95);
+        } else {
+          speakTurkish("Doğru!", 0.95);
+        }
+
+        setTimeout(() => {
+          if (currentView === 'test') nextSmartQuizQuestion();
+        }, 1700);
+
+      } else {
+        // YANLIŞ CEVAP (TAKILMA TESPİTİ)
+        st.wrong += 1;
+        st.streak = 0;
+        st.box = 'struggling'; // Hemen sık sorulacaklar / takılınanlar kutusuna al
+        st.dailyHistory[today].w += 1;
+
+        // Hangi kelimeyle karıştırdığını kaydet
+        const chosenItem = allCurriculumItems.find(i => i.id === chosenId);
+        if (chosenItem) {
+          st.confusedWith[chosenItem.word] = (st.confusedWith[chosenItem.word] || 0) + 1;
+        }
+
+        appState.dailyLogs[today].total += 1;
+        appState.dailyLogs[today].wrong += 1;
+        if (!appState.dailyLogs[today].wrongItems.includes(currentQuizTarget.word)) {
+          appState.dailyLogs[today].wrongItems.push(currentQuizTarget.word);
+        }
+
+        saveState();
+
+        if (btnEl) {
+          btnEl.classList.add('border-rose-500', 'bg-rose-500/15', 'animate-shake');
+        }
+
+        fb.textContent = `🤔 Tekrar dinleyip bulalım Nisa!`;
+        fb.className = "w-full min-h-[42px] rounded-2xl flex items-center justify-center text-xs font-black text-center px-3 bg-rose-500/15 text-rose-600";
+
+        speakTurkish(currentQuizTarget.tts, 0.75);
+      }
+    }
+
+    function startTargetedStruggleQuiz() {
+      forceStrugglingOnly = true;
+      switchMainView('test');
+    }
+
+    // ============================================================================
+    // 6. NİSA ÖZEL İSTATİSTİK & FARKLI GÜNLERDE TAKILMA ANALİZİ EKRANI
+    // ============================================================================
+    function renderStatsDashboard() {
+      let totalCorrect = 0;
+      let totalWrong = 0;
+      const strugglingArr = [];
+      const masteredArr = [];
+
+      allCurriculumItems.forEach(item => {
+        const st = ensureItemStat(item.id);
+        totalCorrect += st.correct;
+        totalWrong += st.wrong;
+
+        if (st.box === 'struggling' || st.wrong > 0) {
+          strugglingArr.push({ item, st });
+        }
+        if (st.box === 'mastered') {
+          masteredArr.push({ item, st });
+        }
+      });
+
+      const totalTests = totalCorrect + totalWrong;
+      const acc = totalTests > 0 ? Math.round((totalCorrect / totalTests) * 100) : 0;
+
+      document.getElementById('stat-total-tests').textContent = totalTests;
+      document.getElementById('stat-accuracy-rate').textContent = `%${acc} Başarı`;
+      document.getElementById('stat-struggling-count').textContent = strugglingArr.filter(x => x.st.box === 'struggling').length;
+      document.getElementById('stat-mastered-count').textContent = masteredArr.length;
+
+      // En çok takıldıklarını hata sayısına ve farklı gün sayısına göre sırala
+      strugglingArr.sort((a, b) => b.st.wrong - a.st.wrong);
+
+      const strugContainer = document.getElementById('struggling-list');
+      if (strugglingArr.length === 0) {
+        strugContainer.innerHTML = `
+          <div class="p-4 rounded-2xl bg-[var(--background)] border border-[var(--border)] text-center text-xs text-[var(--muted-foreground)] font-semibold">
+            🎉 Harika! Şu ana kadar Nisa'nın takıldığı bir hece veya kelime tespit edilmedi.
+          </div>
+        `;
+      } else {
+        strugContainer.innerHTML = strugglingArr.map(({ item, st }) => {
+          // Kaç farklı günde hata yapmış?
+          const wrongDays = Object.entries(st.dailyHistory || {}).filter(([_, val]) => val.w > 0);
+          const isPersistentDayIssue = wrongDays.length >= 2;
+
+          // En çok hangi şıkla karıştırmış?
+          const confusedEntries = Object.entries(st.confusedWith || {});
+          const topConfused = confusedEntries.length > 0
+            ? confusedEntries.sort((a, b) => b[1] - a[1])[0][0]
+            : null;
+
+          const coloredWord = item.displayParts.map(dp =>
+            `<span class="${dp.color === 'red' ? 'syl-red' : 'syl-blue'}">${dp.text}</span>`
+          ).join('');
+
+          return `
+            <div class="p-3 rounded-2xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <button onclick="speakTurkish('${item.tts}')" class="w-12 h-12 rounded-2xl bg-[var(--card)] border border-[var(--border)] font-black text-xl flex items-center justify-center shadow-sm">
+                  ${coloredWord}
+                </button>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-extrabold text-xs">${item.word} (${item.week}. Hafta)</span>
+                    ${isPersistentDayIssue
+                      ? `<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[9px] font-black">${wrongDays.length} Farklı Günde Takıldı!</span>`
+                      : `<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 text-[9px] font-extrabold">${wrongDays.length} Günde Hata</span>`
+                    }
+                  </div>
+                  <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">
+                    Yanlış: <strong class="text-rose-600">${st.wrong}</strong> • Doğru: <strong class="text-emerald-600">${st.correct}</strong>
+                    ${topConfused ? ` • En çok <strong>"${topConfused}"</strong> ile karıştırdı` : ''}
+                  </div>
+                </div>
+              </div>
+              <span class="text-[10px] font-extrabold px-2 py-1 rounded-lg ${st.box === 'struggling' ? 'bg-rose-500/10 text-rose-600' : 'bg-emerald-500/10 text-emerald-600'}">
+                ${st.box === 'struggling' ? 'Sık Sorulur' : 'Düzeliyor'}
+              </span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Nadir Çıkarılacaklar Kutusu Listesi
+      const mastContainer = document.getElementById('mastered-box-list');
+      if (masteredArr.length === 0) {
+        mastContainer.innerHTML = `
+          <div class="w-full p-3 rounded-2xl bg-[var(--background)] border border-[var(--border)] text-center text-xs text-[var(--muted-foreground)]">
+            Bir hece üst üste 3 kez doğru bilindiğinde otomatik olarak buraya (Nadir Kutusuna) atılır.
+          </div>
+        `;
+      } else {
+        mastContainer.innerHTML = masteredArr.map(({ item, st }) => `
+          <div class="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-1.5 text-xs font-extrabold text-emerald-700 dark:text-emerald-300">
+            <span>✅ ${item.word}</span>
+            <span class="text-[10px] opacity-75">(${st.correct}D/${st.wrong}Y)</span>
+            <button onclick="moveBackToLearning('${item.id}')" title="Tekrar Sık Sor" class="ml-1 text-[10px] underline text-blue-600">Geri Al</button>
+          </div>
+        `).join('');
+      }
+
+      // Günlük Test Geçmişi
+      const dailyContainer = document.getElementById('daily-log-container');
+      const dayKeys = Object.keys(appState.dailyLogs || {}).sort().reverse();
+      if (dayKeys.length === 0) {
+        dailyContainer.innerHTML = `
+          <div class="p-3 rounded-2xl bg-[var(--background)] border border-[var(--border)] text-center text-xs text-[var(--muted-foreground)]">
+            Henüz günlük test kaydı yok. "2. Minik Test" sekmesinden birkaç soru çözün.
+          </div>
+        `;
+      } else {
+        dailyContainer.innerHTML = dayKeys.map(dateStr => {
+          const log = appState.dailyLogs[dateStr];
+          const rate = log.total > 0 ? Math.round((log.correct / log.total) * 100) : 0;
+          return `
+            <div class="p-3 rounded-2xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-between text-xs">
+              <div>
+                <div class="font-extrabold">🗓️ ${dateStr}</div>
+                <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">
+                  ${log.wrongItems && log.wrongItems.length > 0
+                    ? `Takıldıkları: <strong class="text-rose-600">${log.wrongItems.join(', ')}</strong>`
+                    : `🌟 Hiç hata yapmadı!`}
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-black text-emerald-600">%${rate} Başarı</div>
+                <div class="text-[10px] text-[var(--muted-foreground)]">${log.correct} Doğru / ${log.wrong} Yanlış</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function moveBackToLearning(itemId) {
+      const st = ensureItemStat(itemId);
+      st.box = 'learning';
+      st.streak = 0;
+      saveState();
+      renderStatsDashboard();
+    }
+
+    function resetAllStats() {
+      if (!confirm("Nisa'nın tüm test ve kutu istatistiklerini sıfırlamak istediğinize emin misiniz?")) return;
+      appState.itemStats = {};
+      appState.dailyLogs = {};
+      saveState();
+      renderStatsDashboard();
+      renderWeekGrid();
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      loadState();
       selectWeek(0);
     });
   </script>
